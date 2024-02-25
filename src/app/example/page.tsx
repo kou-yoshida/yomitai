@@ -1,18 +1,18 @@
 import { instance } from "@/src/lib/fetch";
 export default async function Example() {
-  const result = await instance.get<any>(
-    "/",
-    {
-      next: {
-        revalidate: 10,
-      },
-    },
-    {
-      message: "hello",
-    }
-  );
+  // const result = await instance.get<any>(
+  //   "/",
+  //   {
+  //     next: {
+  //       revalidate: 10,
+  //     },
+  //   },
+  //   {
+  //     message: "hello",
+  //   }
+  // );
 
-  return <div>{result}</div>;
+  return <div>{"result"}</div>;
 }
 
 // "use client";
