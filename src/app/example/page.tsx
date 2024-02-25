@@ -1,16 +1,16 @@
-import { getHoge } from "./repository/getHoge";
-
+import { instance } from "@/src/lib/fetch";
 export default async function Example() {
-  // const res = await fetch(`http://localhost:3000/api?message=hello`, {
-  //   // next: { revalidate: 10 },
-  //   cache: "no-store",
-  // });
-
-  // const _res = await
-
-  const result = await getHoge({ cache: "no-store" });
-
-  // return <div>hello example</div>;
+  const result = await instance.get<any>(
+    "/",
+    {
+      next: {
+        revalidate: 10,
+      },
+    },
+    {
+      message: "hello",
+    }
+  );
 
   return <div>{result}</div>;
 }
