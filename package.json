@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:push": "prisma db push",
+    "db:format": "prisma format"
   },
   "dependencies": {
+    "@prisma/client": "^5.10.1",
     "next": "14.1.0",
     "prisma": "^5.10.1",
     "react": "^18",
