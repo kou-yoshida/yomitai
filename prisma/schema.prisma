@@ -7,3 +7,84 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model User {
+  id        String  @id
+  name      String
+  githubUrl String?
+  zennUrl   String?
+  quitaUrl  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  todos       Todo[]
+  tags        Tag[]
+  updatedLogs UpdatedLog[]
+
+  @@index([id])
+}
+
+model Todo {
+  id      String @id
+  url     String
+  content String
+  status  Status
+  userId  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id])
+  updatedLogs UpdatedLog[]
+
+  @@index([userId])
+}
+
+enum Status {
+  TODO
+  COMPLETED
+}
+
+model Tag {
+  id     Int    @id
+  name   String
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model UpdatedLog {
+  userId     String
+  todoId     String
+  actionType ActionType
+
+  user User @relation(fields: [userId], references: [id])
+  todo Todo @relation(fields: [todoId], references: [id])
+
+  @@id([userId, todoId])
+  @@index([userId])
+  @@index([todoId])
+}
+
+enum ActionType {
+  CREATE
+  COMPULETE
+}
+
+model Follow {
+  userId       String
+  followUserId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([userId, followUserId])
+  @@index([userId])
+  @@index([followUserId])
+}
