@@ -18,6 +18,9 @@ export const config = {
     }),
     // ...add more providers here
   ],
+  pages: {
+    signIn: "/login",
+  },
 } satisfies NextAuthOptions;
 
 // Use it in server contexts
