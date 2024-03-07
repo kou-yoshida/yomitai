@@ -9,8 +9,8 @@ generator client {
 }
 
 model User {
-    id            String    @id @default(cuid())
-  name          String?
+  id        String  @id @default(cuid())
+  name      String?
   githubUrl String?
   zennUrl   String?
   quitaUrl  String?
@@ -18,6 +18,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  private       Boolean   @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -26,27 +27,25 @@ model User {
   tags        Tag[]
   updatedLogs UpdatedLog[]
 
-  accounts      Account[]
+  accounts Account[]
 
   @@index([id])
 }
 
-
-
 // for next-auth @see https://authjs.dev/reference/adapter/prisma
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -54,9 +53,8 @@ model Account {
   @@index([userId])
 }
 
-
 model Todo {
-  id      String @id
+  id      Int @id @default(autoincrement())
   url     String
   content String
   status  Status
@@ -77,7 +75,7 @@ enum Status {
 }
 
 model Tag {
-  id     Int    @id
+  id     Int    @id @default(autoincrement())
   name   String
   userId String
 
@@ -91,7 +89,7 @@ model Tag {
 
 model UpdatedLog {
   userId     String
-  todoId     String
+  todoId     Int
   actionType ActionType
 
   user User @relation(fields: [userId], references: [id])
@@ -104,7 +102,7 @@ model UpdatedLog {
 
 enum ActionType {
   CREATE
-  COMPULETE
+  COMPLETE
 }
 
 model Follow {
