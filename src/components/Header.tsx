@@ -1,14 +1,15 @@
 "use client";
 import { signIn, signOut } from "next-auth/react";
-import Link from "@/src/components/Link";
+import { Link } from "@/src/components/link/Link";
+import { Button } from "./button/Button";
 
 export default function Header() {
   return (
     <div>
-      <Link path="/" label="ホーム" />
-      <Link path="/example" label="example" />
-      <Link path="login" label="login" />
-      <button onClick={() => signOut()}>ログアウト</button>
+      <Link path="/">Home</Link>
+      <Link path="/example">Example</Link>
+
+      <Button onClick={() => signOut()}>ログアウト</Button>
     </div>
   );
 }
