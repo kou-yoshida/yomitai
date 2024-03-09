@@ -1,7 +1,7 @@
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
-  directUrl         = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -54,7 +54,7 @@ model Account {
 }
 
 model Todo {
-  id      Int @id @default(autoincrement())
+  id      String @id @default(uuid())
   url     String
   content String
   status  Status
@@ -75,7 +75,7 @@ enum Status {
 }
 
 model Tag {
-  id     Int    @id @default(autoincrement())
+  id     String @id @default(uuid())
   name   String
   userId String
 
@@ -88,14 +88,14 @@ model Tag {
 }
 
 model UpdatedLog {
+  id        String @id @default(uuid())
   userId     String
-  todoId     Int
+  todoId     String
   actionType ActionType
 
   user User @relation(fields: [userId], references: [id])
   todo Todo @relation(fields: [todoId], references: [id])
 
-  @@id([userId, todoId])
   @@index([userId])
   @@index([todoId])
 }

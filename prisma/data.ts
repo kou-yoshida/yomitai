@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { Prisma } from "@prisma/client";
+import { create } from "domain";
 
 type createUserParams = Prisma.UserCreateManyInput;
 type createTodoParams = Prisma.TodoCreateManyInput;
@@ -23,6 +24,7 @@ export function seedData() {
   })) satisfies createUserParams[];
 
   const createManyTodoParams = [...Array(10)].map((value, i) => ({
+    id: faker.string.uuid(),
     url: faker.internet.url(),
     status: faker.helpers.arrayElement(["TODO", "COMPLETED"]),
     userId: faker.helpers.arrayElement(
@@ -33,7 +35,8 @@ export function seedData() {
     updatedAt: faker.date.recent(),
   })) satisfies createTodoParams[];
 
-  const createManyTagParams = [...Array(10)].map(() => ({
+  const createManyTagParams = [...Array(10)].map((_, i) => ({
+    id: faker.string.uuid(),
     name: faker.lorem.word(),
     userId: faker.helpers.arrayElement(
       createManyUserParams.map((item) => item.id)
@@ -43,19 +46,18 @@ export function seedData() {
   })) satisfies createTagParams[];
 
   const createManyUpdatedLogParams = [...Array(10)].map((_, i) => ({
-    userId: faker.helpers.arrayElement(
-      createManyUserParams.map((item) => item.id)
-    ),
-    todoId: i,
+    userId: createManyUserParams[i].id,
+    todoId: createManyTodoParams[i].id,
     actionType: faker.helpers.arrayElement(["CREATE", "COMPLETE"]),
   })) satisfies createUpdatedLogParams[];
 
-  const userId = faker.helpers.arrayElement(
-    createManyUserParams.map((item) => item.id)
-  );
   const createManyFollowParams = [...Array(10)].map((_, i) => ({
-    userId: i.toString(),
-    followUserId: (i + 1).toString(),
+    userId: faker.helpers.arrayElement(
+      createManyUserParams.map((item) => item.id)
+    ),
+    followUserId: faker.helpers.arrayElement(
+      createManyUserParams.map((item) => item.id)
+    ),
     createdAt: faker.date.recent(),
     updatedAt: faker.date.recent(),
   })) satisfies createFollowParams[];
