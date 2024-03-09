@@ -47,6 +47,8 @@ export const config = {
   },
 } satisfies NextAuthOptions;
 
+console.log(config, process.env.NEXTAUTH_SECRET);
+
 // Use it in server contexts
 export function auth(
   ...args:
