@@ -18,7 +18,6 @@ export default async function Example() {
 
   return (
     <div>
-      {JSON.stringify(result, null, 2)}
       <button>api叩く</button>
     </div>
   );
