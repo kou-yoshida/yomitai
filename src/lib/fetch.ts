@@ -38,7 +38,7 @@ class CustomFetch {
    */
   private _genUrl = (path: string, params?: { [key: string]: string }) => {
     if (!params || !Object.keys(params).length)
-      return process.env.API_BASE_URL + path;
+      return process.env.NEXT_PUBLIC_API_BASE_URL + path;
 
     Object.keys(params).forEach((key) => {
       if (params[key] === undefined) {
@@ -48,7 +48,12 @@ class CustomFetch {
 
     const urlSearchParams = new URLSearchParams(params);
 
-    return process.env.API_BASE_URL + path + "?" + urlSearchParams.toString();
+    return (
+      process.env.NEXT_PUBLIC_API_BASE_URL +
+      path +
+      "?" +
+      urlSearchParams.toString()
+    );
   };
 
   /**
@@ -66,6 +71,7 @@ class CustomFetch {
       ...this._commonConfig,
       ...config,
       headers: { ...this._commonConfig.headers, ...config.headers },
+      credentials: "include",
     });
 
     return await result.json();

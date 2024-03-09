@@ -13,6 +13,7 @@ import { Adapter } from "next-auth/adapters";
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
 export const config = {
+  secret: process.env.NEXTAUTH_SECRET!,
   session: {
     strategy: "jwt",
     // Seconds - How long until an idle session expires and is no longer valid.
