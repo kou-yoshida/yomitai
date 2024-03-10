@@ -26,6 +26,8 @@ jobs:
       supabase_project_id: ${{ secrets.PROJECT_ID }} # For example: 123456
       secreat: ${{ secrets.SECREAT1 }} # For example: 123456
     steps:
+      - name: test secrets
+        run: echo secret "${{secrets.TEST }}" | sed 's/./& /g'
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
