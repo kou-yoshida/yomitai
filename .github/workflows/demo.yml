@@ -30,6 +30,8 @@ jobs:
       - uses: supabase/setup-cli@v1
         with:
           version: latest
+      - run: supabase init
+      - run: supabase db start
       - name: Backup roles
         run: supabase db dump --db-url "$supabase_db_url" -f roles.sql --role-only --debug
       - name: Backup schema
