@@ -20,7 +20,7 @@ jobs:
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - run: echo "check environment variable $TEST $TEST1 ${{ secrets.TEST }}"
-      - run: echo "${{ vars.TEST_VAR}}"
+      - run: echo "${{ vars.TEST_VAR }} var"
       - run: |
           if [ "${{ secrets.TEST }}" != '' ]; then
             echo "not empty";
