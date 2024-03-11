@@ -38,7 +38,7 @@ jobs:
           version: latest
       - run: supabase init
       - run: supabase db start
-      - run: supabase link --project-ref $supabase_project_id
+      # - run: supabase link --project-ref $supabase_project_id
       - name: Backup roles
         run: supabase db dump --db-url "$supabase_db_url" -f roles.sql --role-only --debug
       - name: Backup schema
