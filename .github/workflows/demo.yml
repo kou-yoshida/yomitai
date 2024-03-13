@@ -5,7 +5,8 @@ jobs:
   Backup-Supabase:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: "read"
+      id-token: "write"
     env:
       supabase_db_url: ${{ secrets.DB_URL }} # For example: postgresql://postgres:[YOUR-PASSWORD]@db.<ref>.supabase.co:5432/postgres
       supabase_project_id: ${{ secrets.PROJECT_ID }} # For example: 123456
@@ -31,13 +32,6 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-
-  Upload-GCE:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: "read"
-      id-token: "write"
-    steps:
       - id: "auth"
         uses: "google-github-actions/auth@v2"
         with:
