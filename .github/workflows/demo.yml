@@ -2,24 +2,6 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
-    runs-on: ubuntu-latest
-    env:
-      TEST: ${{ secrets.TEST }}
-      TEST1: "test1!!!!"
-    steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
-
   Backup-Supabase:
     runs-on: ubuntu-latest
     permissions:
@@ -40,11 +22,14 @@ jobs:
       - run: supabase db start
       # - run: supabase link --project-ref $supabase_project_id
       - name: Backup roles
-        run: supabase db dump --db-url "$supabase_db_url" -f roles.sql --role-only --debug
+        run: supabase db dump --db-url "$supabase_db_url" -f backup/roles.sql --role-only --debug
       - name: Backup schema
-        run: supabase db dump --db-url "$supabase_db_url" -f schema.sql
+        run: supabase db dump --db-url "$supabase_db_url" -f backup/schema.sql
       - name: Backup data
-        run: supabase db dump --db-url "$supabase_db_url" -f data.sql --data-only --use-copy
+        run: supabase db dump --db-url "$supabase_db_url" -f backup/data.sql --data-only --use-copy
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
+      # ここから、作成したバッグアップをGCEにアップロードする
+
+  # Deploy-Google-Cloud-Storage:
