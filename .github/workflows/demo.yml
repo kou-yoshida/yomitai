@@ -21,6 +21,7 @@ jobs:
       - run: supabase init
       - run: supabase db start
       # - run: supabase link --project-ref $supabase_project_id
+      - run: mkdir backup
       - name: Backup roles
         run: supabase db dump --db-url "$supabase_db_url" -f backup/roles.sql --role-only --debug
       - name: Backup schema
