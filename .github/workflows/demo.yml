@@ -43,6 +43,10 @@ jobs:
         with:
           credentials_json: ${{ secrets.Service_Account_Key_JSON }}
 
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+
       - id: "upload-folder"
         uses: "google-github-actions/upload-cloud-storage@v2"
         with:
