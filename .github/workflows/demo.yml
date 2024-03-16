@@ -26,9 +26,7 @@ jobs:
       - name: Backup schema
         run: supabase db dump --db-url "$supabase_db_url" -f backup/schema.sql
       - name: Backup data
-        run: supabase db dump --db-url "$supabase_db_url" -f backup/data.sql --data-only --use-copy
-      - name: cleanUp
-        run: supabase stop --no-backup
+        run: supabase db dump --db-url "$supabase_db_url" -f backup/backup_$(date +%Y-%m-%d).sql --data-only --use-copy
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
