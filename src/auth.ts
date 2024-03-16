@@ -9,6 +9,7 @@ import { getServerSession } from "next-auth";
 import Google from "next-auth/providers/google";
 import prisma from "./db";
 import { Adapter } from "next-auth/adapters";
+import { UnauthenticatedError } from "./errors/UnauthenticatedError";
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
@@ -48,11 +49,13 @@ export const config = {
 } satisfies NextAuthOptions;
 
 // Use it in server contexts
-export function auth(
+export async function auth(
   ...args:
     | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
     | [NextApiRequest, NextApiResponse]
     | []
 ) {
-  return getServerSession(...args, config);
+  const session = await getServerSession(...args, config);
+  if (!session) throw new UnauthenticatedError();
+  return session;
 }
