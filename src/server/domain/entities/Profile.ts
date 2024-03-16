@@ -1,3 +1,5 @@
+import { User } from "@prisma/client";
+
 export class Profile {
   constructor(
     private _id: string,
@@ -8,6 +10,33 @@ export class Profile {
     private _zennUrl?: string,
     private _quitaUrl?: string
   ) {}
+
+  /**
+   * prismaのレスポンスからProfileエンティティを生成する
+   */
+  static fromPrismaResponse(response: User) {
+    return new Profile(
+      response.id,
+      response.name || "No Name",
+      response.image || "No Image",
+      response.private,
+      response.githubUrl || undefined,
+      response.zennUrl || undefined,
+      response.quitaUrl || undefined
+    );
+  }
+
+  public toObject() {
+    return {
+      id: this._id,
+      name: this._name,
+      imageUrl: this._imageUrl,
+      isPrivate: this._isPrivate,
+      githubUrl: this._githubUrl,
+      zennUrl: this._zennUrl,
+      quitaUrl: this._quitaUrl,
+    };
+  }
 
   public get id() {
     return this._id;
