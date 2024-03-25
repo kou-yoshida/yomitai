@@ -18,14 +18,6 @@ export class GetProfileRepositoryImpl implements GetProfileRepository {
 
     if (!result) throw new NotFoundError();
 
-    return new Profile(
-      result.id,
-      result.name || "No Name",
-      result.image || "No Image",
-      result.private,
-      result.githubUrl || undefined,
-      result.zennUrl || undefined,
-      result.quitaUrl || undefined
-    );
+    return Profile.fromPrismaResponse(result);
   };
 }
