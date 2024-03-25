@@ -3,9 +3,9 @@ x-stoplight:
   id: 218u0hpmz1uhc
 info:
   title: yomitai-api-doc
-  version: "1.0"
+  version: '1.0'
 servers:
-  - url: "http://localhost:3000"
+  - url: 'http://localhost:3000'
 paths:
   /profiel:
     parameters: []
@@ -13,23 +13,23 @@ paths:
       summary: Get Profiel
       tags: []
       responses:
-        "200":
+        '200':
           description: User Found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Profilel"
+                $ref: '#/components/schemas/Profilel'
             application/xml:
               schema:
                 type: object
                 properties:
                   profiled:
-                    $ref: "#/components/schemas/Profilel"
+                    $ref: '#/components/schemas/Profilel'
                     x-stoplight:
                       id: i8t5wglzvh2dd
                 required:
                   - profiled
-        "404":
+        '404':
           description: User Not Found
           content:
             application/json:
@@ -43,12 +43,12 @@ paths:
       operationId: get-profiel
       description: ユーザー自身のプロフィール情報を取得
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
     put:
       summary: Put Profiel
       operationId: put-profiel
       responses:
-        "200":
+        '200':
           description: OK
       requestBody:
         content:
@@ -57,7 +57,7 @@ paths:
               type: object
               properties:
                 profiel:
-                  $ref: "#/components/schemas/Profilel"
+                  $ref: '#/components/schemas/Profilel'
                   x-stoplight:
                     id: u7b4qcyn5dskb
                 private:
@@ -68,13 +68,13 @@ paths:
                 - profiel
                 - private
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
-  "/profilel/{userId}":
+        - $ref: '#/components/parameters/next-auth.session-token'
+  '/user/{userId}/profilel':
     get:
       parameters: []
       summary: Get ProfielByUserId
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -82,7 +82,7 @@ paths:
                 type: object
                 properties:
                   profiel:
-                    $ref: "#/components/schemas/Profilel"
+                    $ref: '#/components/schemas/Profilel'
                     x-stoplight:
                       id: 170hmiz3tllsg
       operationId: get-profiel-by-id
@@ -93,12 +93,12 @@ paths:
         name: userId
         in: path
         required: true
-  /task-list:
+  /suspend-list:
     get:
       summary: GET TaskList
       tags: []
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -110,11 +110,11 @@ paths:
                       id: jkk2m9guct2km
                     type: array
                     items:
-                      $ref: "#/components/schemas/Todo"
+                      $ref: '#/components/schemas/Todo'
                       x-stoplight:
                         id: qeipa3pff2465
                   pagination:
-                    $ref: "#/components/schemas/Pagination"
+                    $ref: '#/components/schemas/Pagination'
                     x-stoplight:
                       id: f1czrtf5lke0m
                 required:
@@ -128,19 +128,19 @@ paths:
             schema:
               type: object
               properties:
-                tag:
+                tagId:
                   type: number
                   x-stoplight:
                     id: 9hv18zazp2l6u
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
     parameters: []
   /complete-list:
     get:
-      summary: Your GET CompleteList
+      summary: GET CompleteList
       tags: []
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -152,11 +152,11 @@ paths:
                     x-stoplight:
                       id: fjiwkvbcqtagc
                     items:
-                      $ref: "#/components/schemas/Todo"
+                      $ref: '#/components/schemas/Todo'
                       x-stoplight:
                         id: 0cdt2pvmtq103
                   pagination:
-                    $ref: "#/components/schemas/Pagination"
+                    $ref: '#/components/schemas/Pagination'
                     x-stoplight:
                       id: 9w69f2s9h7qsl
                 required:
@@ -164,18 +164,18 @@ paths:
                   - pagination
       operationId: get-complete-list
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                tag:
+                tagId:
                   type: number
                   x-stoplight:
                     id: yisgfo4pugykr
-  "/task-list/{userId}":
+  '/user/{userId}/suspend-list':
     parameters:
       - schema:
           type: string
@@ -183,10 +183,10 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: GET TaskListByUserId
       tags: []
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -203,11 +203,11 @@ paths:
                         x-stoplight:
                           id: nrl5eszma0s4a
                         items:
-                          $ref: "#/components/schemas/Todo"
+                          $ref: '#/components/schemas/Todo'
                           x-stoplight:
                             id: xdczyonh2hqzz
                       pagination:
-                        $ref: "#/components/schemas/Pagination"
+                        $ref: '#/components/schemas/Pagination'
                         x-stoplight:
                           id: pq4zbgm3wn3zn
                     required:
@@ -215,8 +215,18 @@ paths:
                       - pagination
       operationId: get-task-list-userId
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
-  "/complete-list/{userId}":
+        - $ref: '#/components/parameters/next-auth.session-token'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tagId:
+                  type: number
+                  x-stoplight:
+                    id: stoxx5bhp7ink
+  '/user/{userId}/complete-list':
     parameters:
       - schema:
           type: string
@@ -224,10 +234,10 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET CompleteListByUserId
+      summary: GET CompleteListByUserId
       tags: []
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -244,11 +254,11 @@ paths:
                         x-stoplight:
                           id: 8c398wd4yq8zf
                         items:
-                          $ref: "#/components/schemas/Todo"
+                          $ref: '#/components/schemas/Todo'
                           x-stoplight:
                             id: ei2dmhfckohqp
                       pagination:
-                        $ref: "#/components/schemas/Pagination"
+                        $ref: '#/components/schemas/Pagination'
                         x-stoplight:
                           id: 6at5c78kz9if5
                     required:
@@ -256,18 +266,18 @@ paths:
                       - pagination
       operationId: get-complete-list-userId
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                tag:
+                tagId:
                   type: number
                   x-stoplight:
                     id: l0y92sqi6roqy
-  "/todo/{todoId}":
+  '/todo/{todoId}':
     parameters:
       - schema:
           type: string
@@ -275,10 +285,10 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: GET TodoById
       tags: []
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -286,23 +296,23 @@ paths:
                 type: object
                 properties:
                   todo:
-                    $ref: "#/components/schemas/Todo"
+                    $ref: '#/components/schemas/Todo'
                     x-stoplight:
                       id: bc1sjsqfobpwb
       operationId: get-todo-todoId
       description: |
         idを元に、Todo詳細を取得
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
     put:
-      summary: ""
+      summary: Put TodoById
       operationId: put-todo-todoId
       responses:
-        "200":
+        '200':
           description: OK
       description: todoを更新
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
       requestBody:
         content:
           application/json:
@@ -318,21 +328,21 @@ paths:
                   x-stoplight:
                     id: mb05j5nux4khd
                 status:
-                  $ref: "#/components/schemas/TodoStatus"
+                  $ref: '#/components/schemas/TodoStatus'
                   x-stoplight:
                     id: z7ier7lu5i2mc
               required:
                 - id
                 - status
     delete:
-      summary: ""
+      summary: Delete TodoById
       operationId: delete-todo-todoId
       responses:
-        "200":
+        '200':
           description: OK
       description: todoを削除（アーカイブ）
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
       requestBody:
         content:
           application/json:
@@ -346,14 +356,14 @@ paths:
   /todo:
     parameters: []
     post:
-      summary: CreateTodo
+      summary: POST Todo
       operationId: post-todo
       responses:
-        "200":
+        '200':
           description: OK
       description: Todoを新規作成
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
       requestBody:
         content:
           application/json:
@@ -368,19 +378,28 @@ paths:
                   type: string
                   x-stoplight:
                     id: 2pg728lyxk79s
+                tagIds:
+                  type: array
+                  x-stoplight:
+                    id: undj2nclmr6hi
+                  items:
+                    x-stoplight:
+                      id: 1d4ll2t6184vv
+                    type: number
               required:
                 - url
+                - tagIds
   /followers:
     get:
-      summary: Your GET endpoint
+      summary: GET Followers
       tags: []
       responses: {}
       operationId: get-followers
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
-  "/followers/{userId}":
+        - $ref: '#/components/parameters/next-auth.session-token'
+  '/user/{userId}/followers':
     get:
-      summary: Your GET endpoint
+      summary: GET FollowersByUserId
       tags: []
       responses: {}
       operationId: get-followers-userId
@@ -392,13 +411,13 @@ paths:
         required: true
   /following:
     get:
-      summary: Your GET endpoint
+      summary: GET Followings
       tags: []
       responses: {}
       operationId: get-following
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
-  "/following/{userId}":
+        - $ref: '#/components/parameters/next-auth.session-token'
+  '/user/{userId}/following':
     parameters:
       - schema:
           type: string
@@ -406,75 +425,74 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: GET FollowingsByUserId
       tags: []
       responses: {}
       operationId: get-following-userId
   /follow:
     post:
-      summary: ""
+      summary: POST Follow
       operationId: post-follow
       responses:
-        "200":
+        '200':
           description: OK
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                targetUserId:
+                  type: string
+                  x-stoplight:
+                    id: woacbkg8dn9lu
+              required:
+                - targetUserId
   /unfollow:
     put:
-      summary: ""
+      summary: PUT Unfollow
       operationId: put-unfollow
       responses:
-        "200":
+        '200':
           description: OK
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                targetUserId:
+                  type: string
+                  x-stoplight:
+                    id: xtc7oq8bgvvv8
+              required:
+                - targetUserId
   /timeline:
     get:
-      summary: Your GET endpoint
+      summary: GET Timeline
       tags: []
       responses: {}
       operationId: get-timeline
-      parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+      parameters: []
       description: 誰でもみれる課題更新のタイムライン
   /following/timeline:
     get:
-      summary: Your GET endpoint
+      summary: GET FollowingTimeline
       tags: []
       responses: {}
       operationId: get-following-timeline
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
-  /tags:
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  tags:
-                    x-stoplight:
-                      id: dsm2uenjxkonj
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Tag"
-                      x-stoplight:
-                        id: lnb867g09voru
-                required:
-                  - tags
-      operationId: get-tags
-      parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
+  /tag:
     post:
-      summary: ""
+      summary: POST Tag
       operationId: post-tags
       responses:
-        "200":
+        '200':
           description: OK
       requestBody:
         content:
@@ -489,12 +507,12 @@ paths:
               required:
                 - name
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
     put:
-      summary: ""
+      summary: PUT Tag
       operationId: put-tags
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -505,30 +523,36 @@ paths:
                     type: string
                     x-stoplight:
                       id: pzp3fov6v8tax
+                  tagId:
+                    type: number
+                    x-stoplight:
+                      id: 8n7kk9q8r40t7
                 required:
                   - name
+                  - tagId
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
+        - $ref: '#/components/parameters/next-auth.session-token'
     delete:
-      summary: ""
+      summary: Delete Tag
       operationId: delete-tags
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  id:
+                  tagId:
                     type: string
                     x-stoplight:
                       id: lvp9i5m3f8cdj
                 required:
-                  - id
+                  - tagId
       parameters:
-        - $ref: "#/components/parameters/next-auth.session-token"
-  "/tags/{userId}":
+        - $ref: '#/components/parameters/next-auth.session-token'
+    parameters: []
+  '/user/{userId}/tags':
     parameters:
       - schema:
           type: string
@@ -536,10 +560,10 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: GET TagsByUserId
       tags: []
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -551,12 +575,38 @@ paths:
                     x-stoplight:
                       id: b8e0xzsn5brv3
                     items:
-                      $ref: "#/components/schemas/Tag"
+                      $ref: '#/components/schemas/Tag'
                       x-stoplight:
                         id: 19vkqizn2qrzz
                 required:
                   - tags
       operationId: get-tags-userId
+  /tags:
+    get:
+      summary: GET Tags
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tags:
+                    type: array
+                    x-stoplight:
+                      id: 0lan14qhxuxh2
+                    items:
+                      $ref: '#/components/schemas/Tag'
+                      x-stoplight:
+                        id: 1vt14iznac1ja
+                required:
+                  - tags
+      operationId: get-tag
+      parameters:
+        - $ref: '#/components/parameters/next-auth.session-token'
+    parameters: []
 components:
   schemas:
     Profilel:

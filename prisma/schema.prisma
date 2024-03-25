@@ -65,12 +65,13 @@ model Todo {
 
   user        User         @relation(fields: [userId], references: [id])
   updatedLogs UpdatedLog[]
+  tags        TodoTag[]
 
   @@index([userId])
 }
 
 enum Status {
-  TODO
+  SUSPENDED
   COMPLETED
 }
 
@@ -84,7 +85,21 @@ model Tag {
 
   user User @relation(fields: [userId], references: [id])
 
+  tags TodoTag[]
+
   @@index([userId])
+}
+
+model TodoTag {
+  todoId String
+  tagId  String
+
+  todo Todo @relation(fields: [todoId], references: [id])
+  tag  Tag  @relation(fields: [tagId], references: [id])
+
+  @@id([todoId, tagId])
+  @@index([todoId])
+  @@index([tagId])
 }
 
 model UpdatedLog {
