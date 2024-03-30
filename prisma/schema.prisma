@@ -1,91 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id        String  @id @default(cuid())
-  name      String?
-  githubUrl String?
-  zennUrl   String?
-  quitaUrl  String?
-
-  email         String?   @unique
+  id            String           @id @default(cuid())
+  name          String?
+  githubUrl     String?
+  zennUrl       String?
+  quitaUrl      String?
+  email         String?          @unique
   emailVerified DateTime?
   image         String?
-  private       Boolean   @default(false)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  todos       Todo[]
-  tags        Tag[]
-  updatedLogs UpdatedLog[]
-
-  accounts Account[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  private       Boolean          @default(false)
+  accounts      Account[]
+  follow        FollowFollowed[] @relation("follow")
+  followed      FollowFollowed[] @relation("followed")
+  notifications Notification[]
+  tags          Tag[]
+  todos         Todo[]
+  updatedLogs   UpdatedLog[]
 
   @@index([id])
 }
 
-// for next-auth @see https://authjs.dev/reference/adapter/prisma
 model Account {
   id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
 
 model Todo {
-  id      String @id @default(uuid())
-  url     String
-  content String
-  status  Status
-  userId  String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id          String       @id @default(uuid())
+  url         String
+  content     String?
+  status      Status
+  userId      String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   user        User         @relation(fields: [userId], references: [id])
-  updatedLogs UpdatedLog[]
   tags        TodoTag[]
+  updatedLogs UpdatedLog[]
 
   @@index([userId])
 }
 
-enum Status {
-  SUSPENDED
-  COMPLETED
-}
-
 model Tag {
-  id     String @id @default(uuid())
-  name   String
-  userId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-
-  tags TodoTag[]
+  id        String    @id @default(uuid())
+  name      String
+  userId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
+  tags      TodoTag[]
 
   @@index([userId])
 }
@@ -93,9 +80,8 @@ model Tag {
 model TodoTag {
   todoId String
   tagId  String
-
-  todo Todo @relation(fields: [todoId], references: [id])
-  tag  Tag  @relation(fields: [tagId], references: [id])
+  tag    Tag    @relation(fields: [tagId], references: [id])
+  todo   Todo   @relation(fields: [todoId], references: [id])
 
   @@id([todoId, tagId])
   @@index([todoId])
@@ -103,16 +89,43 @@ model TodoTag {
 }
 
 model UpdatedLog {
-  id        String @id @default(uuid())
   userId     String
   todoId     String
   actionType ActionType
-
-  user User @relation(fields: [userId], references: [id])
-  todo Todo @relation(fields: [todoId], references: [id])
+  id         String     @id @default(uuid())
+  todo       Todo       @relation(fields: [todoId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([todoId])
+}
+
+model FollowFollowed {
+  followUserId   String
+  followedUserId String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  followUser     User     @relation("follow", fields: [followUserId], references: [id])
+  followedUser   User     @relation("followed", fields: [followedUserId], references: [id])
+
+  @@id([followedUserId, followUserId])
+  @@index([followedUserId])
+  @@index([followUserId])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  createdAt DateTime         @default(now())
+  readAt    DateTime?
+  type      NotificationType
+  user      User             @relation(fields: [userId], references: [id])
+}
+
+enum Status {
+  SUSPENDED
+  COMPLETED
+  DELETED
 }
 
 enum ActionType {
@@ -120,14 +133,7 @@ enum ActionType {
   COMPLETE
 }
 
-model Follow {
-  userId       String
-  followUserId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@id([userId, followUserId])
-  @@index([userId])
-  @@index([followUserId])
+enum NotificationType {
+  FOLLOW
+  TODO
 }

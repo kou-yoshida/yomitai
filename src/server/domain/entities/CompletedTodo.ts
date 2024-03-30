@@ -17,7 +17,7 @@ export class CompletedTodo {
     userId,
   }: {
     url: string;
-    content: string;
+    content: string | undefined;
     userId: string;
   }) {
     const now = new Date();
@@ -32,14 +32,21 @@ export class CompletedTodo {
     );
   }
 
-  static reconstruct(
-    id: string,
-    url: string,
-    content: string | undefined,
-    userId: string,
-    createdAt: Date,
-    updatedAt: Date
-  ) {
+  static reconstruct({
+    id,
+    url,
+    content,
+    userId,
+    createdAt,
+    updatedAt,
+  }: {
+    id: string;
+    url: string;
+    content: string | undefined;
+    userId: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }) {
     return new CompletedTodo(
       id,
       url,
@@ -69,6 +76,14 @@ export class CompletedTodo {
 
   public get userId() {
     return this._userId;
+  }
+
+  public get createdAt() {
+    return this._createdAt;
+  }
+
+  public get updatedAt() {
+    return this._updatedAt;
   }
 
   public toObject() {

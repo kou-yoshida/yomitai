@@ -7,13 +7,16 @@ import { Pagination } from "@/src/server/domain/entities/Pagination";
 import { validate } from "@/src/lib/validate";
 import { getSuspendedTodoListByUserIdParamsSchema } from "./_validationSchema";
 
-export async function GET(req: NextRequest) {
+export async function GET(
+  req: NextRequest,
+  { params: { userId } }: { params: { userId: string } }
+) {
   try {
     const query = req.nextUrl.searchParams;
     const pageParam = query.get("page");
     const limitParam = query.get("limit");
 
-    const { tagIds, page, limit, userId } = await validate(
+    const { tagIds, page, limit } = await validate(
       getSuspendedTodoListByUserIdParamsSchema,
       {
         ...(await req.json()),

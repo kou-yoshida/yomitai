@@ -3,7 +3,10 @@ import { CompletedTodo } from "../domain/entities/CompletedTodo";
 import { SuspendedTodo } from "../domain/entities/SuspendedTodo";
 import { GetTodoDetailRepository } from "../domain/repositories/GetTodoDetailRepository";
 import { NotFoundError } from "@/src/errors/NotFountError";
-import { TODO_STATUS } from "../domain/entities/constants/TodoStatus";
+import {
+  TODO_STATUS,
+  TodoStatus,
+} from "../domain/entities/constants/TodoStatus";
 import { UnprocessableEntityError } from "@/src/errors/UnprocessableEntityError";
 
 export class GetTodoDetailRepositoryImpl implements GetTodoDetailRepository {
@@ -25,29 +28,31 @@ export class GetTodoDetailRepositoryImpl implements GetTodoDetailRepository {
     if (!todo) throw new NotFoundError();
 
     if (todo.status === TODO_STATUS.Completed) {
-      return CompletedTodo.reconstruct(
-        todo.id,
-        todo.url,
-        todo.content,
-        todo.userId,
-        todo.createdAt,
-        todo.updatedAt
-      );
+      return CompletedTodo.reconstruct({
+        id: todo.id,
+        url: todo.url,
+        content: todo.content || undefined,
+        userId: todo.userId,
+        createdAt: todo.createdAt,
+        updatedAt: todo.updatedAt,
+      });
     }
 
     if (todo.status === TODO_STATUS.Suspended) {
-      return SuspendedTodo.reconstruct(
-        todo.id,
-        todo.url,
-        todo.content,
-        todo.userId,
-        todo.createdAt,
-        todo.updatedAt
-      );
+      return SuspendedTodo.reconstruct({
+        id: todo.id,
+        url: todo.url,
+        content: todo.content || undefined,
+        userId: todo.userId,
+        createdAt: todo.createdAt,
+        updatedAt: todo.updatedAt,
+      });
     }
 
     throw new UnprocessableEntityError(
-      `Unexpected status: ${todo.status satisfies never}`
+      `Unexpected status: ${
+        todo.status satisfies (typeof TODO_STATUS)["Deleted"]
+      }`
     );
   }
 }

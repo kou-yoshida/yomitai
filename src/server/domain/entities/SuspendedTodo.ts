@@ -4,7 +4,7 @@ export class SuspendedTodo {
   private constructor(
     private _id: string | undefined,
     private _url: string,
-    private _content: string,
+    private _content: string | undefined,
     private _status: typeof TODO_STATUS.Suspended = TODO_STATUS.Suspended,
     private _userId: string,
     private _createdAt: Date,
@@ -17,7 +17,7 @@ export class SuspendedTodo {
     userId,
   }: {
     url: string;
-    content: string;
+    content: string | undefined;
     userId: string;
   }) {
     const now = new Date();
@@ -32,14 +32,21 @@ export class SuspendedTodo {
     );
   }
 
-  static reconstruct(
-    id: string,
-    url: string,
-    content: string,
-    userId: string,
-    createdAt: Date,
-    updatedAt: Date
-  ) {
+  static reconstruct({
+    id,
+    url,
+    content,
+    userId,
+    createdAt,
+    updatedAt,
+  }: {
+    id: string;
+    url: string;
+    content: string | undefined;
+    userId: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }) {
     return new SuspendedTodo(
       id,
       url,
@@ -69,6 +76,13 @@ export class SuspendedTodo {
 
   public get userId() {
     return this._userId;
+  }
+  public get createdAt() {
+    return this._createdAt;
+  }
+
+  public get updatedAt() {
+    return this._updatedAt;
   }
 
   public toObject() {
