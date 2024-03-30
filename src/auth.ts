@@ -10,6 +10,8 @@ import Google from "next-auth/providers/google";
 import prisma from "./db";
 import { Adapter } from "next-auth/adapters";
 import { UnauthenticatedError } from "./errors/UnauthenticatedError";
+import { GetUserUseCase } from "./server/useCase/GetUserUseCase";
+import { GetUserRepositoryImpl } from "./server/repositories/GetUserRepositoryImpl";
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
@@ -57,5 +59,7 @@ export async function auth(
 ) {
   const session = await getServerSession(...args, config);
   if (!session) throw new UnauthenticatedError();
-  return session;
+
+  const useCase = new GetUserUseCase(new GetUserRepositoryImpl(prisma));
+  return await useCase.execute(session.user.id);
 }

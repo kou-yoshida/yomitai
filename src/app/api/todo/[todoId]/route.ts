@@ -1,4 +1,109 @@
-export function Get(req: Request) {
-  // todoIdがuserIdに紐ずく物かの確認
-  // 問題なければtodoを返す
+import { auth } from "@/src/auth";
+import { GetTodoDetailRepositoryImpl } from "@/src/server/repositories/GetTodoDetailRepositoryImpl";
+import { GetTodoDetailUseCase } from "@/src/server/useCase/GetTodoDetailUseCase";
+import { prisma } from "@/src/lib/prisma";
+import {
+  getTodoDetailRequestSchema,
+  postTodoRequestSchema,
+  putTodoRequestSchema,
+} from "./_validationSchema";
+import { validate } from "@/src/lib/validate";
+import { NextResponse } from "next/server";
+import { CompletedTodo } from "@/src/server/domain/entities/CompletedTodo";
+import { PostTodoUseCase } from "@/src/server/useCase/PostTodoUseCase";
+import { PostTodoRepositoryImpl } from "@/src/server/repositories/PostTodoRepositoryImpl";
+import { TODO_STATUS } from "@/src/server/domain/entities/constants/TodoStatus";
+import { PutTodoUseCase } from "@/src/server/useCase/PutTodoUseCase";
+import { PutTodoRepositoryImpl } from "@/src/server/repositories/PutTodoRepositoryImpl";
+import { DeleteTodoUseCase } from "@/src/server/useCase/DeleteTodoUseCase";
+import { DeleteTodoRepositoryImpl } from "@/src/server/repositories/DeleteTodoRepositoryImpl";
+
+export async function GET(req: Request) {
+  try {
+    const { todoId } = await validate(
+      getTodoDetailRequestSchema,
+      await req.json()
+    );
+    const user = await auth();
+
+    const useCase = new GetTodoDetailUseCase(
+      new GetTodoDetailRepositoryImpl(prisma)
+    );
+
+    const todo = await useCase.execute({ todoId, user, isLoginUser: true });
+
+    return NextResponse.json({ todo });
+  } catch (e) {
+    return NextResponse.json(e);
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const { url, content, tagIds } = await validate(
+      postTodoRequestSchema,
+      await req.json()
+    );
+    const { id: userId } = await auth();
+
+    const useCase = new PostTodoUseCase(new PostTodoRepositoryImpl(prisma));
+    const todo = await useCase.execute(
+      { url, content, userId },
+      TODO_STATUS.Suspended,
+      tagIds
+    );
+
+    return NextResponse.json({ todo });
+  } catch (e) {
+    return NextResponse.json(e);
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const {
+      url,
+      content,
+      tagIds,
+      status,
+      todoId,
+      createdAt: createdAtIsoString,
+      updatedAt: updatedAtIosString,
+    } = await validate(putTodoRequestSchema, await req.json());
+
+    const { id: userId } = await auth();
+
+    const useCase = new PutTodoUseCase(new PutTodoRepositoryImpl(prisma));
+
+    const createdAt = new Date(createdAtIsoString);
+    const updatedAt = new Date(updatedAtIosString);
+
+    const todo = await useCase.execute(
+      { url, content, userId, id: todoId, createdAt, updatedAt },
+      status,
+      tagIds
+    );
+
+    return NextResponse.json({ todo });
+  } catch (e) {
+    return NextResponse.json(e);
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const { todoId } = await validate(
+      getTodoDetailRequestSchema,
+      await req.json()
+    );
+    const user = await auth();
+
+    const useCase = new DeleteTodoUseCase(new DeleteTodoRepositoryImpl(prisma));
+
+    await useCase.execute(todoId, user);
+
+    return NextResponse.json({});
+  } catch (e) {
+    return NextResponse.json(e);
+  }
 }

@@ -42,14 +42,14 @@ export class GetCompletedTodoListRepositoryImpl
       if (todo.status !== TODO_STATUS.Completed)
         throw new UnprocessableEntityError();
 
-      return CompletedTodo.reconstruct(
-        todo.id,
-        todo.url,
-        todo.content,
-        todo.userId,
-        todo.createdAt,
-        todo.updatedAt
-      );
+      return CompletedTodo.reconstruct({
+        id: todo.id,
+        url: todo.url,
+        content: todo.content || undefined,
+        userId: todo.userId,
+        createdAt: todo.createdAt,
+        updatedAt: todo.updatedAt,
+      });
     });
 
     return new ListDto(list, amount);

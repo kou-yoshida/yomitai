@@ -14,7 +14,7 @@ import { validate } from "@/src/lib/validate";
  */
 export async function GET(request: Request) {
   try {
-    const { user } = await auth();
+    const user = await auth();
 
     const useCase = new GetProfileUseCase(new GetProfileRepositoryImpl(prisma));
     const profile = (await useCase.execute(user.id))?.toObject();
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
  */
 export async function PUT(request: Request) {
   try {
-    const { user } = await auth();
+    const user = await auth();
     const requestBody = await validate(putProfileRequestSchema, request);
     const dto = ProfilePutDto.fromRequest(requestBody);
 

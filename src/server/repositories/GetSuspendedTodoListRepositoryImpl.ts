@@ -41,14 +41,14 @@ export class GetSuspendedTodoListRepositoryImpl
     const list = suspendedTodoList.map((todo) => {
       if (todo.status !== TODO_STATUS.Suspended)
         throw new UnprocessableEntityError();
-      return SuspendedTodo.reconstruct(
-        todo.id,
-        todo.url,
-        todo.content,
-        todo.userId,
-        todo.createdAt,
-        todo.updatedAt
-      );
+      return SuspendedTodo.reconstruct({
+        id: todo.id,
+        url: todo.url,
+        content: todo.content || undefined,
+        userId: todo.userId,
+        createdAt: todo.createdAt,
+        updatedAt: todo.updatedAt,
+      });
     });
 
     return new ListDto(list, amount);
