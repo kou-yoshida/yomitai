@@ -1,20 +1,28 @@
 import { CompletedTodo } from "../domain/entities/CompletedTodo";
+import { Pagination } from "../domain/entities/Pagination";
 import { SuspendedTodo } from "../domain/entities/SuspendedTodo";
+import { User } from "../domain/entities/User";
 import {
   TodoStatus,
   TODO_STATUS,
 } from "../domain/entities/constants/TodoStatus";
+import { GetFollowersRepository } from "../domain/repositories/GetFollowersRepository";
 import { PostTodoRepository } from "../domain/repositories/PostTodoRepository";
+import { GetFollowersUseCase } from "./GetFollowersUseCase";
 
 export class PostTodoUseCase {
-  constructor(private repository: PostTodoRepository) {}
+  constructor(
+    private postTodoRepository: PostTodoRepository,
+    private getFollowersRepository: GetFollowersRepository
+  ) {}
 
   async execute(
     createParams:
       | Parameters<typeof CompletedTodo.create>[0]
       | Parameters<typeof SuspendedTodo.create>[0],
     status: TodoStatus,
-    tagIds: string[]
+    tagIds: string[],
+    user: User
   ) {
     const { content, url, userId } = createParams;
 
@@ -23,6 +31,21 @@ export class PostTodoUseCase {
         ? CompletedTodo.create({ content, url, userId })
         : SuspendedTodo.create({ content, url, userId });
 
-    return await this.repository.execute(todo, tagIds);
+    const getFollowersUseCase = new GetFollowersUseCase(
+      this.getFollowersRepository
+    );
+
+    // FIXME: 1000人以上のフォロワーは考慮しないが、直したい
+    const { list } = await getFollowersUseCase.execute(
+      user,
+      new Pagination(1, 1000),
+      true
+    );
+
+    return await this.postTodoRepository.execute(
+      todo,
+      tagIds,
+      list.map((followers) => followers.toObject().userId)
+    );
   }
 }

@@ -17,6 +17,7 @@ import { PutTodoUseCase } from "@/src/server/useCase/PutTodoUseCase";
 import { PutTodoRepositoryImpl } from "@/src/server/repositories/PutTodoRepositoryImpl";
 import { DeleteTodoUseCase } from "@/src/server/useCase/DeleteTodoUseCase";
 import { DeleteTodoRepositoryImpl } from "@/src/server/repositories/DeleteTodoRepositoryImpl";
+import { GetFollowersRepositoryImpl } from "@/src/server/repositories/GetFollowersRepositoryImpl";
 
 export async function GET(req: Request) {
   try {
@@ -44,13 +45,17 @@ export async function POST(req: Request) {
       postTodoRequestSchema,
       await req.json()
     );
-    const { id: userId } = await auth();
+    const user = await auth();
 
-    const useCase = new PostTodoUseCase(new PostTodoRepositoryImpl(prisma));
+    const useCase = new PostTodoUseCase(
+      new PostTodoRepositoryImpl(prisma),
+      new GetFollowersRepositoryImpl(prisma)
+    );
     const todo = await useCase.execute(
-      { url, content, userId },
+      { url, content, userId: user.id },
       TODO_STATUS.Suspended,
-      tagIds
+      tagIds,
+      user
     );
 
     return NextResponse.json({ todo });
@@ -71,17 +76,21 @@ export async function PUT(req: Request) {
       updatedAt: updatedAtIosString,
     } = await validate(putTodoRequestSchema, await req.json());
 
-    const { id: userId } = await auth();
+    const user = await auth();
 
-    const useCase = new PutTodoUseCase(new PutTodoRepositoryImpl(prisma));
+    const useCase = new PutTodoUseCase(
+      new PutTodoRepositoryImpl(prisma),
+      new GetFollowersRepositoryImpl(prisma)
+    );
 
     const createdAt = new Date(createdAtIsoString);
     const updatedAt = new Date(updatedAtIosString);
 
     const todo = await useCase.execute(
-      { url, content, userId, id: todoId, createdAt, updatedAt },
+      { url, content, userId: user.id, id: todoId, createdAt, updatedAt },
       status,
-      tagIds
+      tagIds,
+      user
     );
 
     return NextResponse.json({ todo });

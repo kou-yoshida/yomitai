@@ -9,7 +9,7 @@ export class GetProfileUseCase {
   execute = async (userId: string) => {
     const profile = await this.repository.execute(userId);
 
-    if (profile.idPrivate) return;
+    if (profile.isPrivate) return;
 
     return profile;
   };

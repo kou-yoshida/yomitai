@@ -5,10 +5,9 @@ import { ValidationError } from "../errors/ValidationError";
  */
 export const validate = async <T extends z.ZodRawShape>(
   validationSchema: z.ZodObject<T>,
-  request: Request
+  input: Record<string, any>
 ) => {
-  const body = await request.json();
-  const result = validationSchema.safeParse(body);
+  const result = validationSchema.safeParse(input);
   if (!result.success) throw new ValidationError();
   return result.data;
 };
