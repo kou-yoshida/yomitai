@@ -62,7 +62,7 @@ export class Profile {
     return this._quitaUrl;
   }
 
-  public get idPrivate() {
+  public get isPrivate() {
     return this._isPrivate;
   }
 }

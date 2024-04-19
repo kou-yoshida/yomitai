@@ -1,12 +1,13 @@
 import { CompletedTodo } from "../domain/entities/CompletedTodo";
+import { Pagination } from "../domain/entities/Pagination";
 import { SuspendedTodo } from "../domain/entities/SuspendedTodo";
+import { User } from "../domain/entities/User";
 import {
   TodoStatus,
   TODO_STATUS,
 } from "../domain/entities/constants/TodoStatus";
 import { GetFollowersRepository } from "../domain/repositories/GetFollowersRepository";
 import { PutTodoRepository } from "../domain/repositories/PutTodoRepository";
-import { GetFollowersRepositoryImpl } from "../repositories/GetFollowersRepositoryImpl";
 import { GetFollowersUseCase } from "./GetFollowersUseCase";
 
 export class PutTodoUseCase {
@@ -20,7 +21,8 @@ export class PutTodoUseCase {
       | Parameters<typeof CompletedTodo.reconstruct>[0]
       | Parameters<typeof SuspendedTodo.reconstruct>[0],
     status: TodoStatus,
-    tagIds: string[]
+    tagIds: string[],
+    user: User
   ) {
     const { content, url, userId, id, createdAt, updatedAt } = createParams;
 
@@ -47,9 +49,18 @@ export class PutTodoUseCase {
       this.getFollowersRepository
     );
 
-    const followers = await getFollowersUseCase.execute(userId);
+    // FIXME: 1000人以上のフォロワーは考慮しないが、直したい
+    const { list } = await getFollowersUseCase.execute(
+      user,
+      new Pagination(1, 1000),
+      true
+    );
 
     // 通知を行うユーザー配列を取得(userIdのフォロワーのid配列を取得)
-    return await this.repository.execute(todo, tagIds);
+    return await this.putTodoRepository.execute(
+      todo,
+      tagIds,
+      list.map((follower) => follower.toObject().userId)
+    );
   }
 }

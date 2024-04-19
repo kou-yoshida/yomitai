@@ -96,6 +96,8 @@ model UpdatedLog {
   todo       Todo       @relation(fields: [todoId], references: [id])
   user       User       @relation(fields: [userId], references: [id])
 
+  updatedAt DateTime   @updatedAt
+
   @@index([userId])
   @@index([todoId])
 }

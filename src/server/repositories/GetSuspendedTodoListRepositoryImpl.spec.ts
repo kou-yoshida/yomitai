@@ -38,15 +38,14 @@ describe("GetProfileRepositoryImpl", () => {
     expect(result).toEqual(
       new ListDto(
         [
-          new SuspendedTodo(
-            mockTodo.id,
-            mockTodo.url,
-            mockTodo.content,
-            mockTodo.status,
-            mockTodo.userId,
-            mockTodo.createdAt,
-            mockTodo.updatedAt
-          ),
+          SuspendedTodo.reconstruct({
+            id: mockTodo.id,
+            url: mockTodo.url,
+            content: mockTodo.content,
+            userId: mockTodo.userId,
+            createdAt: mockTodo.createdAt,
+            updatedAt: mockTodo.updatedAt,
+          }),
         ],
         100
       )

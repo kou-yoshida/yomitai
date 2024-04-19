@@ -389,17 +389,18 @@ paths:
               required:
                 - url
                 - tagIds
-  /followers:
+  /follower-list:
     get:
-      summary: GET Followers
+      summary: GET FollowerList
       tags: []
       responses: {}
       operationId: get-followers
       parameters:
         - $ref: '#/components/parameters/next-auth.session-token'
-  '/user/{userId}/followers':
+    parameters: []
+  '/user/{userId}/follower-list':
     get:
-      summary: GET FollowersByUserId
+      summary: GET FollowerListByUserId
       tags: []
       responses: {}
       operationId: get-followers-userId
@@ -409,15 +410,16 @@ paths:
         name: userId
         in: path
         required: true
-  /following:
+  /following-list:
     get:
-      summary: GET Followings
+      summary: GET FollowingList
       tags: []
       responses: {}
       operationId: get-following
       parameters:
         - $ref: '#/components/parameters/next-auth.session-token'
-  '/user/{userId}/following':
+    parameters: []
+  '/user/{userId}/following-list':
     parameters:
       - schema:
           type: string
@@ -425,7 +427,7 @@ paths:
         in: path
         required: true
     get:
-      summary: GET FollowingsByUserId
+      summary: GET FollowingListByUserId
       tags: []
       responses: {}
       operationId: get-following-userId
@@ -450,27 +452,13 @@ paths:
                     id: woacbkg8dn9lu
               required:
                 - targetUserId
-  /unfollow:
-    put:
-      summary: PUT Unfollow
-      operationId: put-unfollow
+    delete:
+      summary: DeleteFollow
+      operationId: delete-follow
       responses:
         '200':
           description: OK
-      parameters:
-        - $ref: '#/components/parameters/next-auth.session-token'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                targetUserId:
-                  type: string
-                  x-stoplight:
-                    id: xtc7oq8bgvvv8
-              required:
-                - targetUserId
+      description: フォロー解除（中間テーブルを物理削除する）
   /timeline:
     get:
       summary: GET Timeline
@@ -479,7 +467,7 @@ paths:
       operationId: get-timeline
       parameters: []
       description: 誰でもみれる課題更新のタイムライン
-  /following/timeline:
+  '/user/{userId}/following-timeline':
     get:
       summary: GET FollowingTimeline
       tags: []
@@ -487,6 +475,12 @@ paths:
       operationId: get-following-timeline
       parameters:
         - $ref: '#/components/parameters/next-auth.session-token'
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
   /tag:
     post:
       summary: POST Tag
