@@ -467,7 +467,7 @@ paths:
       operationId: get-timeline
       parameters: []
       description: 誰でもみれる課題更新のタイムライン
-  /following/timeline:
+  '/user/{userId}/following-timeline':
     get:
       summary: GET FollowingTimeline
       tags: []
@@ -475,6 +475,12 @@ paths:
       operationId: get-following-timeline
       parameters:
         - $ref: '#/components/parameters/next-auth.session-token'
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
   /tag:
     post:
       summary: POST Tag

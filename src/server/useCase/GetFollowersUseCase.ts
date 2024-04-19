@@ -6,13 +6,10 @@ export class GetFollowersUseCase {
   constructor(private repository: GetFollowersRepository) {}
 
   async execute(user: User, pagination: Pagination, isLoginUser: boolean) {
-    const { list: _list, amount } = await this.repository.execute(
-      user,
-      pagination
-    );
-
     // ログインユーザーではなく、ユーザーが非公開の場合は空配列を返す
-    const list = !isLoginUser || user.isPrivate() ? [] : _list;
+    if (!isLoginUser && user.isPrivate())
+      return { list: [], pagination: { page: 0, limit: 0, amount: 0 } };
+    const { list, amount } = await this.repository.execute(user, pagination);
 
     return {
       list,

@@ -13,12 +13,7 @@ export async function GET(req: NextRequest) {
     const pageParam = query.get("page");
     const limitParam = query.get("limit");
 
-    const [
-      {
-        user: { id },
-      },
-      { tagIds, page, limit },
-    ] = await Promise.all([
+    const [{ id }, { tagIds, page, limit }] = await Promise.all([
       auth(),
       validate(getCompletedTodoListParamsSchema, {
         ...(await req.json()),
