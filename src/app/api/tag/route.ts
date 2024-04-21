@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function Put(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
     const [{ name, tagId }, user] = await Promise.all([
       validate(updateTagSchema, await req.json()),
@@ -46,7 +46,7 @@ export async function Put(req: NextRequest) {
     return NextResponse.json(e);
   }
 }
-export async function Delete(req: NextRequest) {
+export async function DELETE(req: NextRequest) {
   try {
     const [{ tagId }, user] = await Promise.all([
       validate(deleteTagSchema, await req.json()),
