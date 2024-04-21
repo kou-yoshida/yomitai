@@ -23,7 +23,7 @@ export default function Notes() {
     );
   };
 
-  if (data) router.push("/");
+  // if (data) router.push("/");
   return (
     <div>
       {JSON.stringify(data, null, 2)}

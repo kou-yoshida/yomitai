@@ -6,7 +6,7 @@ type createUserParams = Prisma.UserCreateManyInput;
 type createTodoParams = Prisma.TodoCreateManyInput;
 type createTagParams = Prisma.TagCreateManyInput;
 type createUpdatedLogParams = Prisma.UpdatedLogCreateManyInput;
-type createFollowParams = Prisma.FollowCreateManyInput;
+type createFollowFollowedParams = Prisma.FollowFollowedCreateManyInput;
 
 export function seedData() {
   const createManyUserParams = [...Array(10)].map(() => ({
@@ -26,7 +26,7 @@ export function seedData() {
   const createManyTodoParams = [...Array(10)].map((value, i) => ({
     id: faker.string.uuid(),
     url: faker.internet.url(),
-    status: faker.helpers.arrayElement(["TODO", "COMPLETED"]),
+    status: faker.helpers.arrayElement(["COMPLETED", "SUSPENDED"]),
     userId: faker.helpers.arrayElement(
       createManyUserParams.map((item) => item.id)
     ),
@@ -52,7 +52,7 @@ export function seedData() {
   })) satisfies createUpdatedLogParams[];
 
   const createManyFollowParams = [...Array(10)].map((_, i) => ({
-    userId: faker.helpers.arrayElement(
+    followedUserId: faker.helpers.arrayElement(
       createManyUserParams.map((item) => item.id)
     ),
     followUserId: faker.helpers.arrayElement(
@@ -60,7 +60,7 @@ export function seedData() {
     ),
     createdAt: faker.date.recent(),
     updatedAt: faker.date.recent(),
-  })) satisfies createFollowParams[];
+  })) satisfies createFollowFollowedParams[];
 
   return {
     createManyUserParams,
