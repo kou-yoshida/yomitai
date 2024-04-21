@@ -10,21 +10,21 @@ import {
   NextResponse,
 } from "next/server";
 
-// ミドルウェア１
-function middleware_1(middleware: NextMiddleware) {
-  return async (request: NextRequest, event: NextFetchEvent) => {
-    console.log("middleware1 is called");
-    return middleware(request, event);
-  };
-}
+// // ミドルウェア１
+// function middleware_1(middleware: NextMiddleware) {
+//   return async (request: NextRequest, event: NextFetchEvent) => {
+//     console.log("middleware1 is called");
+//     return middleware(request, event);
+//   };
+// }
 
-// ミドルウェア2
-function middleware_2(middleware: NextMiddleware) {
-  return async (request: NextRequest, event: NextFetchEvent) => {
-    console.log("middleware2 is called");
-    return middleware(request, event);
-  };
-}
+// // ミドルウェア2
+// function middleware_2(middleware: NextMiddleware) {
+//   return async (request: NextRequest, event: NextFetchEvent) => {
+//     console.log("middleware2 is called");
+//     return middleware(request, event);
+//   };
+// }
 
 /**
  * 分割したmiddlewareをまとめるファクトリー関数
@@ -55,7 +55,7 @@ export const middleware = withAuth(
     // 認証ミドルウェアの処理
     console.log("withAuth is called");
     // 連結したmiddlewareをまとめて実行
-    middlewareFactory([middleware_1, middleware_2])(req, event);
+    middlewareFactory([])(req, event);
   },
   {
     callbacks: {
