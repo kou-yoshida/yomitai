@@ -8,6 +8,7 @@ export default function Header() {
     <div>
       <Link path="/">Home</Link>
       <Link path="/example">Example</Link>
+      <Link path="/login">login</Link>
 
       <Button onClick={() => signOut()}>ログアウト</Button>
     </div>
