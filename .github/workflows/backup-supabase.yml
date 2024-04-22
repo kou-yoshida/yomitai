@@ -1,0 +1,42 @@
+name: "yomitai-db-backup"
+on:
+  schedule:
+    - cron: "0 8 * * *"
+jobs:
+  Backup-Supabase:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+    env:
+      supabase_db_url: ${{ secrets.DB_URL }} # For example: postgresql://postgres:[YOUR-PASSWORD]@db.<ref>.supabase.co:5432/postgres
+      supabase_project_id: ${{ secrets.PROJECT_ID }} # For example: 123456
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase init
+      - run: supabase db start
+      # - run: supabase link --project-ref $supabase_project_id
+      - run: mkdir backup
+      - name: Backup roles
+        run: supabase db dump --db-url "$supabase_db_url" -f backup/roles.sql --role-only --debug
+      - name: Backup schema
+        run: supabase db dump --db-url "$supabase_db_url" -f backup/schema.sql
+      - name: Backup data
+        run: supabase db dump --db-url "$supabase_db_url" -f backup/backup_$(date +%Y-%m-%d).sql --data-only --use-copy
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: ${{ secrets.Service_Account_Key_JSON }}
+      - id: "upload-folder"
+        uses: "google-github-actions/upload-cloud-storage@v2"
+        with:
+          path: "backup"
+          destination: "yomitai-db-backup"

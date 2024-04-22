@@ -7,10 +7,9 @@ import { Link } from "@/src/components/link/Link";
 import { Menu } from "../components/Menu";
 
 export default async function Home() {
-  const _auth = await auth();
   return (
     <main>
-      {JSON.stringify(_auth, null, 2)}
+      {/* {JSON.stringify(_auth, null, 2)} */}
 
       <div>
         <Button color="secondary">click me</Button>

@@ -9,10 +9,14 @@ import { getServerSession } from "next-auth";
 import Google from "next-auth/providers/google";
 import prisma from "./db";
 import { Adapter } from "next-auth/adapters";
+import { UnauthenticatedError } from "./errors/UnauthenticatedError";
+import { GetUserUseCase } from "./server/useCase/GetUserUseCase";
+import { GetUserRepositoryImpl } from "./server/repositories/GetUserRepositoryImpl";
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
 export const config = {
+  secret: process.env.NEXTAUTH_SECRET!,
   session: {
     strategy: "jwt",
     // Seconds - How long until an idle session expires and is no longer valid.
@@ -47,11 +51,15 @@ export const config = {
 } satisfies NextAuthOptions;
 
 // Use it in server contexts
-export function auth(
+export async function auth(
   ...args:
     | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
     | [NextApiRequest, NextApiResponse]
     | []
 ) {
-  return getServerSession(...args, config);
+  const session = await getServerSession(...args, config);
+  if (!session) throw new UnauthenticatedError();
+
+  const useCase = new GetUserUseCase(new GetUserRepositoryImpl(prisma));
+  return await useCase.execute(session.user.id);
 }

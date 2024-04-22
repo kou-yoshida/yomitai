@@ -1,3 +1,4 @@
+import { auth } from "@/src/auth";
 import { instance } from "@/src/lib/fetch";
 export default async function Example() {
   const result = await instance.get<any>(
@@ -12,7 +13,14 @@ export default async function Example() {
     }
   );
 
-  return <div>{result}</div>;
+  // const session = await auth();
+  // console.log(session, "サーバーコンポーネントで取得");
+
+  return (
+    <div>
+      <button>api叩く</button>
+    </div>
+  );
 }
 
 // "use client";

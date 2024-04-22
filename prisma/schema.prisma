@@ -1,120 +1,141 @@
-datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-    id            String    @id @default(cuid())
-  name          String?
-  githubUrl String?
-  zennUrl   String?
-  quitaUrl  String?
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
 
-  email         String?   @unique
+model User {
+  id            String           @id @default(cuid())
+  name          String?
+  githubUrl     String?
+  zennUrl       String?
+  quitaUrl      String?
+  email         String?          @unique
   emailVerified DateTime?
   image         String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  todos       Todo[]
-  tags        Tag[]
-  updatedLogs UpdatedLog[]
-
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  private       Boolean          @default(false)
   accounts      Account[]
+  follow        FollowFollowed[] @relation("follow")
+  followed      FollowFollowed[] @relation("followed")
+  notifications Notification[]
+  tags          Tag[]
+  todos         Todo[]
+  updatedLogs   UpdatedLog[]
 
   @@index([id])
 }
 
-
-
-// for next-auth @see https://authjs.dev/reference/adapter/prisma
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
 
-
 model Todo {
-  id      String @id
-  url     String
-  content String
-  status  Status
-  userId  String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id          String       @id @default(uuid())
+  url         String
+  content     String?
+  status      Status
+  userId      String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   user        User         @relation(fields: [userId], references: [id])
+  tags        TodoTag[]
   updatedLogs UpdatedLog[]
 
   @@index([userId])
 }
 
-enum Status {
-  TODO
-  COMPLETED
-}
-
 model Tag {
-  id     Int    @id
-  name   String
-  userId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
+  id        String    @id @default(uuid())
+  name      String
+  userId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
+  tags      TodoTag[]
 
   @@index([userId])
+}
+
+model TodoTag {
+  todoId String
+  tagId  String
+  tag    Tag    @relation(fields: [tagId], references: [id])
+  todo   Todo   @relation(fields: [todoId], references: [id])
+
+  @@id([todoId, tagId])
+  @@index([todoId])
+  @@index([tagId])
 }
 
 model UpdatedLog {
   userId     String
   todoId     String
   actionType ActionType
+  id         String     @id @default(uuid())
+  todo       Todo       @relation(fields: [todoId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id])
-  todo Todo @relation(fields: [todoId], references: [id])
+  updatedAt DateTime   @updatedAt
 
-  @@id([userId, todoId])
   @@index([userId])
   @@index([todoId])
 }
 
-enum ActionType {
-  CREATE
-  COMPULETE
+model FollowFollowed {
+  followUserId   String
+  followedUserId String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  followUser     User     @relation("follow", fields: [followUserId], references: [id])
+  followedUser   User     @relation("followed", fields: [followedUserId], references: [id])
+
+  @@id([followedUserId, followUserId])
+  @@index([followedUserId])
+  @@index([followUserId])
 }
 
-model Follow {
-  userId       String
-  followUserId String
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  createdAt DateTime         @default(now())
+  readAt    DateTime?
+  type      NotificationType
+  user      User             @relation(fields: [userId], references: [id])
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum Status {
+  SUSPENDED
+  COMPLETED
+  DELETED
+}
 
-  @@id([userId, followUserId])
-  @@index([userId])
-  @@index([followUserId])
+enum ActionType {
+  CREATE
+  COMPLETE
+}
+
+enum NotificationType {
+  FOLLOW
+  TODO
 }
