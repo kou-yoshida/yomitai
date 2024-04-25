@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background-base: rgb(8, 4, 46);
+  --background-base: rgb(221, 217, 213);
   --text-base: rgb(217, 217, 217);
 }
 
@@ -25,29 +25,10 @@ body {
 }
 
 @layer components {
-  .sp-menu-button--active {
-    @apply cursor-pointer transition-colors hover:bg-slate-700  fixed bottom-5 right-5 bg-slate-500 w-20 h-20 rounded-full flex items-center justify-center md:hidden z-50;
-
-    span {
-      &:nth-child(1) {
-        @apply block w-8 h-0.5 bg-white origin-center rotate-[135deg] translate-x-[15.5px];
-      }
-      &:nth-child(2) {
-        @apply block w-8 h-0.5 bg-white origin-center rotate-45 translate-x-[-15.5px];
-      }
-    }
-  }
-
   .sp-menu-button {
-    @apply cursor-pointer transition-colors hover:bg-slate-700  fixed bottom-5 right-5 bg-slate-500 w-20 h-20 rounded-full flex items-center justify-center md:hidden z-50;
-
+    @apply cursor-pointer transition-colors hover:bg-slate-700 fixed bottom-5 right-5 bg-slate-500 w-20 h-20 rounded-full flex items-center justify-center z-50 gap-2 flex-col;
     span {
-      &:nth-child(1) {
-        @apply block w-8 h-0.5 bg-white  translate-x-[16px];
-      }
-      &:nth-child(2) {
-        @apply block w-8 h-0.5 bg-white  translate-x-[-16px];
-      }
+      @apply block w-8 h-0.5 bg-white;
     }
   }
 }

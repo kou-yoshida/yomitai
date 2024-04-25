@@ -4,7 +4,6 @@ import { auth } from "@/src/auth";
 import { Button } from "@/src/components/button/Button";
 import "./globals.css";
 import { Link } from "@/src/components/link/Link";
-import { Menu } from "../components/Menu";
 
 export default async function Home() {
   return (
@@ -14,7 +13,6 @@ export default async function Home() {
       <div>
         <Button color="secondary">click me</Button>
         <Link path="/login">リンク</Link>
-        <Menu />
       </div>
     </main>
   );
