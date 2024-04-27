@@ -45,7 +45,7 @@ const middlewareFactory = (
 /**
  * 未認証でも閲覧できるページのパス配列
  */
-const PUBLIC_PATHS = ["/login", "/"];
+const PUBLIC_PATHS = ["/login", "/", "/timeline"];
 
 // function widthLogin(middleware?: NextMiddleware) {
 // NextAuth.jsの認証ミドルウェアを実行
