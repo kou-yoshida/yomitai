@@ -11,14 +11,17 @@ export const Button: FC<Props> = ({
   children,
   size,
   color,
+  full,
+  variant,
   onClick,
+  className,
   ...rest
 }) => {
   return (
     <button
       onClick={() => onClick?.()}
       {...rest}
-      className={button({ size, color })}
+      className={button({ size, color, full, variant, className })}
     >
       {children}
     </button>

@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background-base: rgb(221, 217, 213);
-  --text-base: rgb(217, 217, 217);
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background-rgb: white;
@@ -14,21 +9,17 @@
 }
 
 body {
-  color: var(--text-base);
-  background: var(--background-base);
+  @apply font-sans text-text-base bg-background-base;
 }
 
 @layer base {
-  .text-base {
-    color: var(--text-base);
-  }
 }
 
 @layer components {
-  .sp-menu-button {
-    @apply cursor-pointer transition-colors hover:bg-slate-700 fixed bottom-5 right-5 bg-slate-500 w-20 h-20 rounded-full flex items-center justify-center z-50 gap-2 flex-col;
+  .menu-button {
+    @apply cursor-pointer transition-colors hover:bg-primary-hover fixed bottom-5 right-5 bg-primary w-20 h-20 rounded-full flex items-center justify-center z-50 gap-2 flex-col;
     span {
-      @apply block w-8 h-0.5 bg-white;
+      @apply block w-8 h-0.5 bg-background-base;
     }
   }
 }
@@ -36,5 +27,12 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .blur {
+    backdrop-filter: blur(4px);
+  }
+  .full {
+    inset: 0;
+    position: fixed;
   }
 }

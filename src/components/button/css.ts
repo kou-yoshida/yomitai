@@ -3,11 +3,13 @@
 import { VariantProps, tv } from "tailwind-variants";
 
 export const button = tv({
-  base: "font-medium bg-blue-500 text-white  active:opacity-80 ",
+  base: "font-bold text-text-btn active:opacity-80 transition-colors",
   variants: {
     color: {
-      primary: "bg-blue-500 text-white",
-      secondary: "bg-purple-500 text-white",
+      primary: "bg-primary hover:bg-primary-hover",
+      secondary: "bg-secondary hover:bg-secondary-hover text-text-sub",
+      tertiary: "bg-tertiary hover:bg-tertiary-hover",
+      white: "bg-background-base hover:bg-background-sub text-primary",
     },
     size: {
       sm: "text-sm",
@@ -16,7 +18,11 @@ export const button = tv({
     },
     variant: {
       rounded: "rounded-full",
-      square: "rounded",
+      default: "rounded",
+      square: "rounded-none",
+    },
+    full: {
+      true: "w-full",
     },
   },
   compoundVariants: [
@@ -28,7 +34,7 @@ export const button = tv({
   defaultVariants: {
     size: "md",
     color: "primary",
-    variant: "square",
+    variant: "default",
   },
 });
 

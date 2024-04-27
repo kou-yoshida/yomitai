@@ -1,20 +1,23 @@
 import { VariantProps, tv } from "tailwind-variants";
 
 export const link = tv({
-  base: "inline-block text-center py-2 px-4 text-white hover:opacity-80",
+  base: "inline-block font-bold text-center py-2 px-4 transition-colors",
   variants: {
     base: "text-red-500",
     color: {
       primary: "text-gray-800",
     },
     background: {
-      primary: "bg-gray-100 hover:bg-gray-200",
+      primary: "bg-primary hover:bg-primary-hover",
       active: "bg-red-300",
     },
     size: {
       sm: "text-sm",
       md: "text-base",
       lg: "text-lg",
+    },
+    full: {
+      true: "w-full",
     },
     variant: {
       rounded: "rounded-full",

@@ -19,8 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Menu />
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <Menu />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

@@ -11,7 +11,11 @@ export default async function Home() {
       {/* {JSON.stringify(_auth, null, 2)} */}
 
       <div>
+        <Button color="primary">click me</Button>
         <Button color="secondary">click me</Button>
+        <Button color="tertiary" full>
+          click me
+        </Button>
         <Link path="/login">リンク</Link>
       </div>
     </main>
