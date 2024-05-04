@@ -3,7 +3,7 @@
 import { VariantProps, tv } from "tailwind-variants";
 
 export const button = tv({
-  base: "font-bold text-text-btn active:opacity-80 transition-colors",
+  base: "font-bold text-text-btn active:opacity-80 transition-colors flex justify-center items-center gap-2",
   variants: {
     color: {
       primary: "bg-primary hover:bg-primary-hover",

@@ -18,10 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`inter.className `}>
         <AuthProvider>
           <Menu />
-          {children}
+          <div className="p-8">{children}</div>
         </AuthProvider>
       </body>
     </html>
