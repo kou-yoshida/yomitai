@@ -5,6 +5,7 @@ import { ButtonVariants, button } from "./css";
 
 type Props = JSX.IntrinsicElements["button"] & {
   onClick?: () => void | Promise<void>;
+  icon?: JSX.Element;
 } & ButtonVariants;
 
 export const Button: FC<Props> = ({
@@ -15,6 +16,7 @@ export const Button: FC<Props> = ({
   variant,
   onClick,
   className,
+  icon,
   ...rest
 }) => {
   return (
@@ -23,6 +25,7 @@ export const Button: FC<Props> = ({
       {...rest}
       className={button({ size, color, full, variant, className })}
     >
+      {icon && <span>{icon}</span>}
       {children}
     </button>
   );

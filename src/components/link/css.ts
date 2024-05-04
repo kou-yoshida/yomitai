@@ -1,7 +1,7 @@
 import { VariantProps, tv } from "tailwind-variants";
 
 export const link = tv({
-  base: "inline-block font-bold text-center py-2 px-4 transition-colors",
+  base: "font-bold text-center py-2 px-4 transition-colors flex justify-center items-center gap-2",
   variants: {
     base: "text-red-500",
     color: {
